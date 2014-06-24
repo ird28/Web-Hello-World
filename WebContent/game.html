@@ -3,17 +3,26 @@
 <head>
 <meta charset="UTF-8">
 <title>Noughts and Crosses</title>
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script>
+function updateBoard(name) {
+	$.post("rest/brain",{position:name},function(data,status){document.getElementById("board").innerHTML=data;})
+}
+</script>
 </head>
 <body>
+<div id="board">
 . . .
 <br>
 . . .
 <br>
 . . .
 <br>
-<form method="post" action="rest/first">
-Where would you like to go? <input type="number" name="position">
-<input type="submit" value="Go">
-</form>
+</div>
+First name: <input type="text" name="firstname" id="box"><br>
+<script>
+function setName() {document.getElementById("box").value = "fish"; alert("yep")}
+</script>
+<button type="button" onclick='updateBoard(document.getElementById("box").value)'>Change Content</button>
 </body>
 </html>

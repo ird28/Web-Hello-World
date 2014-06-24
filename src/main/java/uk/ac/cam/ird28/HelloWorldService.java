@@ -11,7 +11,7 @@ import javax.ws.rs.core.Response;
 public class HelloWorldService {
 	
 	@GET
-	@Path("/")
+	@Path("/*")
 	public Response responseMsg() {
 		return Response.status(200).entity("Hello world").build();
 	}
@@ -20,6 +20,14 @@ public class HelloWorldService {
 	@Path("/first")
 	public Response reply(@FormParam("position") String n) {
 		return Response.status(200).entity("You chose position " + n).build();
+		
+	}
+	
+	@POST
+	@Path("/brain")
+	public Response getBoard(@FormParam("position") String n) {
+		return Response.status(200).entity("You chose position " + n).build();
+		
 	}
 	
 }
