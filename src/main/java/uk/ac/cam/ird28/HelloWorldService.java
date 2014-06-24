@@ -7,20 +7,19 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.core.Response;
 
-@Path("/test")
+@Path("/")
 public class HelloWorldService {
 	
 	@GET
-	@Path("/form")
+	@Path("/")
 	public Response responseMsg() {
-		String form = "<html><body><form method=\"POST\">Put a word here:<input type=\"text\" name = \"in\"><input type=\"submit\" value=\"Submit\"></form></body></html>";
-		return Response.status(200).entity(form).build();
+		return Response.status(200).entity("Hello world").build();
 	}
 	
 	@POST
-	@Path("/form")
-	public Response reply(@FormParam("in") String word) {
-		return Response.status(200).entity("Your word was " + word).build();
+	@Path("/first")
+	public Response reply(@FormParam("position") String n) {
+		return Response.status(200).entity("You chose position " + n).build();
 	}
 	
 }

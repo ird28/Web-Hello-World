@@ -30,4 +30,9 @@
 			org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher
 		</servlet-class>
 	</servlet>
+	
+	<welcome-file-list>
+    <welcome-file>game.html</welcome-file>
+	</welcome-file-list>
+
 </web-app>
