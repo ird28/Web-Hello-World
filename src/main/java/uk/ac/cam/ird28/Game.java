@@ -31,6 +31,10 @@ public class Game {
 		board[space] = value;
 	}
 	
+	public String getSpace(int s) {
+		return getSym(board[s]);
+	}
+	
 	public int getRandMove() {
 		boolean isSpace = false;
 		for (int i = 0; i < 9; i++) {
@@ -45,6 +49,12 @@ public class Game {
 		return guess;
 	}
 	
+	public boolean fullBoard() {
+		for (int i = 0; i < 9; i++) {
+			if (board[i]==0) return false;
+		}
+		return true;
+	}
 
 	public boolean hasWon(int player) {
 		assert player != 0;

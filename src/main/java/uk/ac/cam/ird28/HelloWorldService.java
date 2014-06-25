@@ -26,9 +26,13 @@ public class HelloWorldService {
 		g.update(Integer.parseInt(n), 1);
 		if (g.hasWon(1))
 			return Response.status(200).entity("w" + g.toString()).build(); // w for win
+		if (g.fullBoard())
+			return Response.status(200).entity("d" + g.toString()).build(); // d for draw
 		g.update(g.getRandMove(), 2);
 		if (g.hasWon(2))
 			return Response.status(200).entity("l" + g.toString()).build(); // l for lose
+		if (g.fullBoard())
+			return Response.status(200).entity("d" + g.toString()).build(); // d for draw
 		return Response.status(200).entity("c" + g.toString()).build(); // c for continue
 	}
 	

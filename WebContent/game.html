@@ -15,7 +15,9 @@ function updateBoard(pos) {
 				if (data.charAt(0)=="w")
 					document.getElementById("bottom").innerHTML='You win.<br><button onclick="location.reload()">New game?</button>';
 				if (data.charAt(0)=="l")
-						document.getElementById("bottom").innerHTML='You lose.<br><button onclick="location.reload()">New game?</button>';
+					document.getElementById("bottom").innerHTML='You lose.<br><button onclick="location.reload()">New game?</button>';
+				if (data.charAt(0)=="d")
+					document.getElementById("bottom").innerHTML='It\'s a draw.<br><button onclick="location.reload()">New game?</button>';
 			})
 }
 </script>
