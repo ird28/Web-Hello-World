@@ -5,19 +5,50 @@
 <title>Noughts and Crosses</title>
 <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
 <script>
+var wins = 0;
+var draws = 0;
+var losses = 0;
 function restart() {
-	$.get("rest/restart")
+	$.get("rest/restart", function(data,status){
+		document.getElementById("0").innerHTML = data.charAt(0);
+		document.getElementById("1").innerHTML = data.charAt(1);
+		document.getElementById("2").innerHTML = data.charAt(2);
+		document.getElementById("3").innerHTML = data.charAt(3);
+		document.getElementById("4").innerHTML = data.charAt(4);
+		document.getElementById("5").innerHTML = data.charAt(5);
+		document.getElementById("6").innerHTML = data.charAt(6);
+		document.getElementById("7").innerHTML = data.charAt(7);
+		document.getElementById("8").innerHTML = data.charAt(8);
+		document.getElementById("bottom").innerHTML = 'Difficulty: <input type="radio" id="diff1" name="diff" value="easy">Easy <input type="radio" id="diff2" name="diff" value="medium" checked>Medium'
+	})
 }
-function updateBoard(pos, diff) {
-	$.post("rest/brain",{position:pos, difficulty:diff},
+function updateBoard(pos) {
+	$.post("rest/brain",{position:pos, difficulty: document.getElementById("diff1").checked ? "easy" : "medium"},
 			function(data,status){
-				document.getElementById("board").innerHTML=data.substring(1);
-				if (data.charAt(0)=="w")
-					document.getElementById("bottom").innerHTML='You win.<br><button onclick="location.reload()">New game?</button>';
-				if (data.charAt(0)=="l")
-					document.getElementById("bottom").innerHTML='You lose.<br><button onclick="location.reload()">New game?</button>';
-				if (data.charAt(0)=="d")
-					document.getElementById("bottom").innerHTML='It\'s a draw.<br><button onclick="location.reload()">New game?</button>';
+				document.getElementById("0").innerHTML = data.charAt(0);
+				document.getElementById("1").innerHTML = data.charAt(1);
+				document.getElementById("2").innerHTML = data.charAt(2);
+				document.getElementById("3").innerHTML = data.charAt(3);
+				document.getElementById("4").innerHTML = data.charAt(4);
+				document.getElementById("5").innerHTML = data.charAt(5);
+				document.getElementById("6").innerHTML = data.charAt(6);
+				document.getElementById("7").innerHTML = data.charAt(7);
+				document.getElementById("8").innerHTML = data.charAt(8);
+				if (data.charAt(9)=="w") {
+					wins++;
+					document.getElementById("wins").innerHTML = wins.toString();
+					document.getElementById("bottom").innerHTML='You win.<br><button onclick="restart()">New game?</button>';
+				}
+				if (data.charAt(9)=="l") {
+					losses++;
+					document.getElementById("losses").innerHTML = losses.toString();
+					document.getElementById("bottom").innerHTML='You lose.<br><button onclick="restart()">New game?</button>';
+				}
+				if (data.charAt(9)=="d") {
+					draws++;
+					document.getElementById("draws").innerHTML = draws.toString();
+					document.getElementById("bottom").innerHTML='It\'s a draw.<br><button onclick="restart()">New game?</button>';
+				}
 			})
 }
 </script>
@@ -26,14 +57,25 @@ function updateBoard(pos, diff) {
 <script>
 restart()
 </script>
-<div id="board">
-. . . . . . <br>
-. . . . . . <br>
-. . . . . . <br>
-</div>
+Wins: <div id="wins" style="display:inline">0</div> &nbsp; Draws: <div id="draws" style="display:inline">0</div> &nbsp; Losses: <div id="losses" style="display:inline">0</div>
+<table class="fixed">
+<tr>
+	<td><button type="submit" onclick='updateBoard("0")' style="width:30px;height:30px"><div id="0"> </div></button></td>
+	<td><button type="submit" onclick='updateBoard("1")' style="width:30px;height:30px"><div id="1"> </div></button></td>
+	<td><button type="submit" onclick='updateBoard("2")' style="width:30px;height:30px"><div id="2"> </div></button></td>
+</tr>
+<tr>
+	<td><button type="submit" onclick='updateBoard("3")' style="width:30px;height:30px"><div id="3"> </div></button></td>
+	<td><button type="submit" onclick='updateBoard("4")' style="width:30px;height:30px"><div id="4"> </div></button></td>
+	<td><button type="submit" onclick='updateBoard("5")' style="width:30px;height:30px"><div id="5"> </div></button></td>
+</tr>
+<tr>
+	<td><button type="submit" onclick='updateBoard("6")' style="width:30px;height:30px"><div id="6"> </div></button></td>
+	<td><button type="submit" onclick='updateBoard("7")' style="width:30px;height:30px"><div id="7"> </div></button></td>
+	<td><button type="submit" onclick='updateBoard("8")' style="width:30px;height:30px"><div id="8"> </div></button></td>
+</tr>
+</table>
 <div id="bottom">
-Where would you like to go? <input type="text" id="box" maxlength="1" size="1">
-<button type="submit" onclick='updateBoard(document.getElementById("box").value, document.getElementById("diff1").checked ? "easy" : "medium")'>Go</button>
 Difficulty:
 <input type="radio" id="diff1" name="diff" value="easy">Easy 
 <input type="radio" id="diff2" name="diff" value="medium" checked>Medium

@@ -19,7 +19,7 @@ public class Game {
 	}
 	
 	private static String getSym(int x) {
-		if (x==0) return ". .";
+		if (x==0) return " ";
 		if (x==1) return "O";
 		if (x==2) return "X";
 		return "FAIL"; // should never happen
@@ -28,8 +28,7 @@ public class Game {
 	public String toString() {
 		StringBuilder result = new StringBuilder();
 		for (int i = 0; i < 9; i++) {
-			result.append(getSym(board[i])+" ");
-			if (i%3 == 2) result.append("<br>");
+			result.append(getSym(board[i]));
 		}
 		return result.toString();
 	}
