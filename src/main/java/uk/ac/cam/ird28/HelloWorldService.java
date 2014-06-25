@@ -10,24 +10,26 @@ import javax.ws.rs.core.Response;
 @Path("/")
 public class HelloWorldService {
 	
-	@GET
-	@Path("/*")
-	public Response responseMsg() {
-		return Response.status(200).entity("Hello world").build();
-	}
+	private static Game g;
 	
-	@POST
-	@Path("/first")
-	public Response reply(@FormParam("position") String n) {
-		return Response.status(200).entity("You chose position " + n).build();
-		
+	@GET
+	@Path("/restart")
+	public Response responseMsg() {
+		g = new Game();
+		System.out.println("restart");
+		return Response.status(200).build();
 	}
 	
 	@POST
 	@Path("/brain")
-	public Response getBoard(@FormParam("position") String n) {
-		return Response.status(200).entity("You chose position " + n).build();
-		
+	public Response processMove(@FormParam("position") String n) { // looks at the move made, makes it, and makes random other
+		g.update(Integer.parseInt(n), 1);
+		if (g.hasWon(1))
+			return Response.status(200).entity("w" + g.toString()).build(); // w for win
+		g.update(g.getRandMove(), 2);
+		if (g.hasWon(2))
+			return Response.status(200).entity("l" + g.toString()).build(); // l for lose
+		return Response.status(200).entity("c" + g.toString()).build(); // c for continue
 	}
 	
 }

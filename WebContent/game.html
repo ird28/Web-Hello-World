@@ -5,24 +5,33 @@
 <title>Noughts and Crosses</title>
 <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
 <script>
-function updateBoard(name) {
-	$.post("rest/brain",{position:name},function(data,status){document.getElementById("board").innerHTML=data;})
+function restart() {
+	$.get("rest/restart")
+}
+function updateBoard(pos) {
+	$.post("rest/brain",{position:pos},
+			function(data,status){
+				document.getElementById("board").innerHTML=data.substring(1);
+				if (data.charAt(0)=="w")
+					document.getElementById("bottom").innerHTML='You win.<br><button onclick="location.reload()">New game?</button>';
+				if (data.charAt(0)=="l")
+						document.getElementById("bottom").innerHTML='You lose.<br><button onclick="location.reload()">New game?</button>';
+			})
 }
 </script>
 </head>
 <body>
-<div id="board">
-. . .
-<br>
-. . .
-<br>
-. . .
-<br>
-</div>
-First name: <input type="text" name="firstname" id="box"><br>
 <script>
-function setName() {document.getElementById("box").value = "fish"; alert("yep")}
+restart()
 </script>
-<button type="button" onclick='updateBoard(document.getElementById("box").value)'>Change Content</button>
+<div id="board">
+. . . . . . <br>
+. . . . . . <br>
+. . . . . . <br>
+</div>
+<div id="bottom">
+Where would you like to go? <input type="number" id="box"><br>
+<button type="submit" onclick='updateBoard(document.getElementById("box").value)'>Go</button>
+</div>
 </body>
 </html>
