@@ -8,8 +8,8 @@
 function restart() {
 	$.get("rest/restart")
 }
-function updateBoard(pos) {
-	$.post("rest/brain",{position:pos},
+function updateBoard(pos, diff) {
+	$.post("rest/brain",{position:pos, difficulty:diff},
 			function(data,status){
 				document.getElementById("board").innerHTML=data.substring(1);
 				if (data.charAt(0)=="w")
@@ -32,8 +32,12 @@ restart()
 . . . . . . <br>
 </div>
 <div id="bottom">
-Where would you like to go? <input type="number" id="box"><br>
-<button type="submit" onclick='updateBoard(document.getElementById("box").value)'>Go</button>
+Where would you like to go? <input type="text" id="box" maxlength="1" size="1">
+<button type="submit" onclick='updateBoard(document.getElementById("box").value, document.getElementById("diff1").checked ? "easy" : "medium")'>Go</button>
+Difficulty:
+<input type="radio" id="diff1" name="diff" value="easy">Easy 
+<input type="radio" id="diff2" name="diff" value="medium" checked>Medium
+
 </div>
 </body>
 </html>

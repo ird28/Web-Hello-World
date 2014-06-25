@@ -11,6 +11,13 @@ public class Game {
 		}
 	}
 	
+	public Game(int[] initialBoard) {
+		board = new int[9];
+		for (int i = 0; i < 9; i++) {
+			board[i] = initialBoard[i];
+		}
+	}
+	
 	private static String getSym(int x) {
 		if (x==0) return ". .";
 		if (x==1) return "O";
@@ -31,22 +38,38 @@ public class Game {
 		board[space] = value;
 	}
 	
-	public String getSpace(int s) {
-		return getSym(board[s]);
+	public int getSpace(int s) {
+		if (s<0 || s >= 9) return -1;
+		return board[s];
 	}
 	
 	public int getRandMove() {
-		boolean isSpace = false;
-		for (int i = 0; i < 9; i++) {
-			if (board[i]==0)
-				isSpace = true;
-		}
-		assert isSpace;
+		assert !fullBoard();
 		int guess = (int) (9.0*Math.random());
 		while (board[guess] != 0) {
 			guess = (int) (9.0*Math.random());
 		}
 		return guess;
+	}
+	
+	public int getOkayMove() {
+		assert !fullBoard();
+		for (int i = 0; i<9; i++) { // win if possible
+			if (board[i]==0) {
+				Game h = new Game(board);
+				h.update(i, 2);
+				if (h.hasWon(2)) return i;
+			}
+		}
+		for (int i = 0; i<9; i++) { // prevent win if possible
+			if (board[i]==0) {
+				Game h = new Game(board);
+				h.update(i, 1);
+				if (h.hasWon(1)) return i;
+			}
+		}
+		if (board[4]==0) return 4; //centre if possible
+		return getRandMove(); // random
 	}
 	
 	public boolean fullBoard() {
