@@ -17,43 +17,30 @@ public class HelloWorldService {
 	public Response responseMsg() {
 		g = new Game();
 		System.out.println("restart");
-		return Response.status(200).entity(g.toString()).build();
+		return Response.status(200).entity(g).build();
 	}
 	
 	@POST
 	@Path("/brain")
-	public Response processMove(@FormParam("position") String n, @FormParam("difficulty") String diff) { // looks at the move made, makes it, and makes random other
-		try {
-			int position = Integer.parseInt(n);
-			if (g.getSpace(position) != 0)
-				return Response.status(200).entity(g.toString()+"c").build(); // c for continue - space full
-			g.update(position, 1);
-		} catch (NumberFormatException nfe) {
-			return Response.status(200).entity(g.toString()+"c").build(); // c for continue - not a number
+	public Response processMove(@FormParam("position") String position, @FormParam("difficulty") String diff) { // looks at the move made, makes it, and makes random other
+		int pos = Integer.parseInt(position);
+		g.update(pos, 1);
+		if (g.getStatus() != "c") {
+			return Response.status(200).entity(g).build();
 		}
-		if (g.hasWon(1)) {
-			return Response.status(200).entity(g.toString()+"w").build(); // w for win
-		}
-		if (g.fullBoard()) {
-			return Response.status(200).entity(g.toString()+"d").build(); // d for draw
-		}
-		System.out.println(diff);
 		if (diff.startsWith("e")) {
-			g.update(g.getRandMove(), 2);
+			g.update(g.computeRandMove(), 2);
 			System.out.println("Easy move made");
 		} else if (diff.startsWith("m")) {
-			g.update(g.getOkayMove(), 2);
+			g.update(g.computeOkayMove(), 2);
 			System.out.println("Medium move made");
+		} else if (diff.startsWith("h")) {
+			g.update(g.computeBestMove(), 2);
+			System.out.println("Hard move made");
 		} else {
 			assert false;
 		}
-		if (g.hasWon(2)) {
-			return Response.status(200).entity(g.toString()+"l").build(); // l for lose
-		}
-		if (g.fullBoard()) {
-			return Response.status(200).entity(g.toString()+"d").build(); // d for draw
-		}
-		return Response.status(200).entity(g.toString()+"c").build(); // c for continue
+		return Response.status(200).entity(g).build();
 	}
 	
 }

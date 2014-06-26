@@ -9,47 +9,37 @@ var wins = 0;
 var draws = 0;
 var losses = 0;
 function restart() {
-	$.get("rest/restart", function(data,status){
-		document.getElementById("0").innerHTML = data.charAt(0);
-		document.getElementById("1").innerHTML = data.charAt(1);
-		document.getElementById("2").innerHTML = data.charAt(2);
-		document.getElementById("3").innerHTML = data.charAt(3);
-		document.getElementById("4").innerHTML = data.charAt(4);
-		document.getElementById("5").innerHTML = data.charAt(5);
-		document.getElementById("6").innerHTML = data.charAt(6);
-		document.getElementById("7").innerHTML = data.charAt(7);
-		document.getElementById("8").innerHTML = data.charAt(8);
-		document.getElementById("bottom").innerHTML = 'Difficulty: <input type="radio" id="diff1" name="diff" value="easy">Easy <input type="radio" id="diff2" name="diff" value="medium" checked>Medium'
-	})
+	$.get("rest/restart", function(data,status,obj){
+		var reply = obj.responseJSON;
+		for (i=0;i<9;i++) {
+			document.getElementById(i.toString()).innerHTML = reply.symBoard[i];;
+		}
+		document.getElementById("bottom").innerHTML = 'Difficulty: <input type="radio" id="diff1" name="diff" value="easy">Easy <input type="radio" id="diff2" name="diff" value="medium" checked>Medium';
+	}, "json")
 }
 function updateBoard(pos) {
 	$.post("rest/brain",{position:pos, difficulty: document.getElementById("diff1").checked ? "easy" : "medium"},
-			function(data,status){
-				document.getElementById("0").innerHTML = data.charAt(0);
-				document.getElementById("1").innerHTML = data.charAt(1);
-				document.getElementById("2").innerHTML = data.charAt(2);
-				document.getElementById("3").innerHTML = data.charAt(3);
-				document.getElementById("4").innerHTML = data.charAt(4);
-				document.getElementById("5").innerHTML = data.charAt(5);
-				document.getElementById("6").innerHTML = data.charAt(6);
-				document.getElementById("7").innerHTML = data.charAt(7);
-				document.getElementById("8").innerHTML = data.charAt(8);
-				if (data.charAt(9)=="w") {
+			function(data,status,obj){
+				var reply = obj.responseJSON;
+				for (i=0;i<9;i++) {
+					document.getElementById(i.toString()).innerHTML = reply.symBoard[i];
+				}
+				if (reply.status == "w") {
 					wins++;
 					document.getElementById("wins").innerHTML = wins.toString();
 					document.getElementById("bottom").innerHTML='You win.<br><button onclick="restart()">New game?</button>';
 				}
-				if (data.charAt(9)=="l") {
+				if (reply.status =="l") {
 					losses++;
 					document.getElementById("losses").innerHTML = losses.toString();
 					document.getElementById("bottom").innerHTML='You lose.<br><button onclick="restart()">New game?</button>';
 				}
-				if (data.charAt(9)=="d") {
+				if (reply.status =="d") {
 					draws++;
 					document.getElementById("draws").innerHTML = draws.toString();
 					document.getElementById("bottom").innerHTML='It\'s a draw.<br><button onclick="restart()">New game?</button>';
 				}
-			})
+			}, "json")
 }
 </script>
 </head>
@@ -79,7 +69,6 @@ Wins: <div id="wins" style="display:inline">0</div> &nbsp; Draws: <div id="draws
 Difficulty:
 <input type="radio" id="diff1" name="diff" value="easy">Easy 
 <input type="radio" id="diff2" name="diff" value="medium" checked>Medium
-
 </div>
 </body>
 </html>

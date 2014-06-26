@@ -23,8 +23,8 @@ public class GameTest {
 		g.update(6, 2);
 		assertFalse(g.fullBoard());
 		assertFalse(g.hasWon(2));
-		assertTrue(g.getRandMove()==7);
-		g.update(g.getRandMove(), 2);
+		assertTrue(g.computeRandMove()==7);
+		g.update(g.computeRandMove(), 2);
 		assertTrue(g.fullBoard());
 		Game h = new Game();
 		h.update(2, 2);
