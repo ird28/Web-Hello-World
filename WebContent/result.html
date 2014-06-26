@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Result</title>
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="/Web-Hello-World/jquery.cookie.js"></script>
+<script>
+$.get("rest/checkpassword", function(data,status) {document.getElementById("main").innerHTML = "Your password was " + data})
+</script>
+</head>
+<body>
+<div id="main"></div>
+</body>
+</html>

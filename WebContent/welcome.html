@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Welcome</title>
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="/Web-Hello-World/jquery.cookie.js"></script>
+<script>
+function submitWord() {
+	$.post("rest/checkpassword", {word:document.getElementById("word").value}, function(data, status){
+		document.getElementById("block").innerHTML = "That password was " + data;
+	})
+}
+</script>
+</head>
+<body>
+From the cookie, your username is <label id="cookiename"></label>
+<script>document.getElementById("cookiename").innerHTML = $.cookie("username")</script>
+
+<div id="block">
+<form method="post">
+What is your password? <input type="text" id="word">
+<button type="button" onclick="submitWord()">Check</button>
+</form>
+</div>
+</body>
+</html>

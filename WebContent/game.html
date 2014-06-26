@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <title>Noughts and Crosses</title>
 <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="/Web-Hello-World/jquery.cookie.js"></script>
 <script>
 var wins = 0;
 var draws = 0;
@@ -21,6 +22,7 @@ function updateBoard(pos) {
 	$.post("rest/brain",{position:pos, difficulty: document.getElementById("diff1").checked ? "easy" : "medium"},
 			function(data,status,obj){
 				var reply = obj.responseJSON;
+				$.post("rest/updatecounters",{state:reply.status})
 				for (i=0;i<9;i++) {
 					document.getElementById(i.toString()).innerHTML = reply.symBoard[i];
 				}
