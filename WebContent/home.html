@@ -12,7 +12,10 @@ if ($.cookie("username")==null) location.assign("login.html")
 $.get("rest/checkname", function(data,status){
 	console.log(data);
 	if (data=="valid") location.assign("game.html");
-	else location.assign("login.html");
+	else {
+		$.removeCookie("username");
+		location.assign("login.html");
+	}
 })
 </script>
 You should have been redirected...

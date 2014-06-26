@@ -46,10 +46,15 @@ function updateBoard(pos) {
 				}
 			}, "json")
 }
+function logout() {
+	$.removeCookie("username");
+	location.assign("home.html");
+}
 </script>
 </head>
 <body>
 Welcome, <label id="usr"></label>.
+<button type="button" onclick="logout()">Log out</button>
 <br>
 <script>
 document.getElementById("usr").innerHTML = $.cookie("username");

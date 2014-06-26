@@ -18,18 +18,24 @@ public class HelloWorldService {
 	@POST
 	@Path("/login")
 	public Response login(@FormParam("username") String username, @FormParam("password") String password) {
-		users.put(username, new User(username, password));
-		System.out.println("new added: "+ users.size());
-		return Response.status(200).build();
+		if (users.containsKey(username)) {
+			if (users.get(username).checkPassword(password)) {
+				System.out.println("Successful log in by "+username);
+				return Response.status(200).entity("correct").build();
+			} else {
+				System.out.println("Failed attempt to log in by "+username);
+				return Response.status(200).entity("incorrect").build();
+			}
+		} else {
+			users.put(username, new User(username, password));
+			System.out.println("Adding user "+username+" with password "+password);
+			return Response.status(200).entity("new").build();
+		}
 	}
 	
 	@POST
 	@Path("/checkpassword")
 	public Response check(@FormParam("word") String word, @CookieParam("username") String username) {
-		System.out.println(users.size());
-		System.out.println("Username from cookie: " + username);
-		System.out.println("Password submitted: " + word);
-		System.out.println("Should be username: " + users.get(username).getName());
 		return Response.status(200).entity(users.get(username).checkPassword(word) ? "correct":"incorrect").build();
 	}	
 	
@@ -44,7 +50,6 @@ public class HelloWorldService {
 	@POST
 	@Path("/updatecounters")
 	public Response done(@FormParam("state") String state, @CookieParam("username") String username) {
-		System.out.println(users.size());
 		if (state.startsWith("w")) users.get(username).incWins();
 		if (state.startsWith("d")) users.get(username).incDraws();
 		if (state.startsWith("l")) users.get(username).incLosses();
