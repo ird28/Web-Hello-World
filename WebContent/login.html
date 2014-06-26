@@ -6,28 +6,54 @@
 <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
 <script src="/Web-Hello-World/jquery.cookie.js"></script>
 <script>
-function submitDeets() {
-	$.post("rest/login", {username: document.getElementById("username").value, password: document.getElementById("password").value},
+function login() {
+	$.post("rest/login", {username: document.getElementById("username1").value, password: document.getElementById("password1").value},
 			function(data) {
-					if (data == "correct" || data == "new") {
-						$.cookie("username", document.getElementById("username").value);
+					if (data == "accepted") {
+						$.cookie("username", document.getElementById("username1").value);
 						location.assign("game.html")
 					}
-					else {
-						document.getElementById("message").innerHTML = "Sorry, incorrect password."
+					else if (data == "rejected") {
+						document.getElementById("password1").value = "";
+						document.getElementById("message1").innerHTML = "Sorry, incorrect password. Please try again."
 					}
-	})
+					else if (data == "unrecognised") {
+						document.getElementById("username1").value = "";
+						document.getElementById("password1").value = "";
+						document.getElementById("message1").innerHTML = "Sorry, the username was not recognised. Please try again."
+					}
+					else {alert("something is wrong")}
+			}
+		)
+}
+function signup() {
+	$.post("rest/signup", {username: document.getElementById("username2").value, password: document.getElementById("password2").value},
+			function(data) {
+				if (data == "success") {
+					$.cookie("username", document.getElementById("username2").value);
+					location.assign("game.html")
+				}
+				else {
+					document.getElementById("username2").value = "";
+					document.getElementById("password2").value = "";
+					document.getElementById("message2").innerHTML = "Sorry, that username has been taken. Please try again."
+				}
+		}		
+	)
 }
 </script>
 </head>
 <body>
-Log in:
-<form>
-Username: <input type="text" id="username">
-Password: <input type="password" id="password">
-<button type="button" onclick='submitDeets()'>Log in</button>
-<div id="message"></div>
+If you have previously logged in: <br>
+Username <input type="text" id="username1">
+Password <input type="password" id="password1">
+<button type="button" onclick='login()'>Log in</button>
+<div id="message1"></div>
 <br>
-</form>
+Else create an account: <br>
+Username <input type="text" id="username2">
+Password <input type="password" id="password2">
+<button type="button" onclick="signup()">Create account</button>
+<div id="message2"></div>
 </body>
 </html>

@@ -21,16 +21,25 @@ public class HelloWorldService {
 		if (users.containsKey(username)) {
 			if (users.get(username).checkPassword(password)) {
 				System.out.println("Successful log in by "+username);
-				return Response.status(200).entity("correct").build();
+				return Response.status(200).entity("accepted").build();
 			} else {
 				System.out.println("Failed attempt to log in by "+username);
-				return Response.status(200).entity("incorrect").build();
+				return Response.status(200).entity("rejected").build();
 			}
 		} else {
-			users.put(username, new User(username, password));
-			System.out.println("Adding user "+username+" with password "+password);
-			return Response.status(200).entity("new").build();
+			return Response.status(200).entity("unrecognised").build();
 		}
+	}
+	
+	@POST
+	@Path("/signup")
+	public Response signup(@FormParam("username") String username, @FormParam("password") String password) {
+		if (users.containsKey(username)) {
+			return Response.status(200).entity("taken").build();
+		}
+		users.put(username, new User(username, password));
+		System.out.println("Adding user "+username+" with password "+password);
+		return Response.status(200).entity("success").build();
 	}
 	
 	@POST
