@@ -7,7 +7,6 @@
 <script src="/Web-Hello-World/jquery.cookie.js"></script>
 <script>
 function submitDeets() {
-	//document.cookie = "username="document.getElementById("username").value();
 	$.cookie("username", document.getElementById("username").value);
 	$.post("rest/login", {username: document.getElementById("username").value, password: document.getElementById("password").value})
 }
@@ -15,7 +14,7 @@ function submitDeets() {
 </head>
 <body>
 This is the login page.
-<form action="welcome.html" method="get">
+<form action="game.html" method="get">
 Choose a name: <input type="text" id="username">
 Choose a password: <input type="text" id="password">
 <button type="submit" onclick='submitDeets()'>Log in</button>

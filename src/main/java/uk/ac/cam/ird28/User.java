@@ -23,9 +23,9 @@ public class User {
 	public int getDraws() { return draws; }
 	public int getLosses() { return losses; }
 	
-	public void incWins() {wins++;}
-	public void incDraws() {draws++;}
-	public void incLosses() {losses++;}
+	public void incWins() {wins++;System.out.println("inc");}
+	public void incDraws() {draws++;System.out.println("inc");}
+	public void incLosses() {losses++;System.out.println("inc");}
 	
 	
 	

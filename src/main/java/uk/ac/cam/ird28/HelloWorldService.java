@@ -19,7 +19,7 @@ public class HelloWorldService {
 	@Path("/login")
 	public Response login(@FormParam("username") String username, @FormParam("password") String password) {
 		users.put(username, new User(username, password));
-		System.out.println(users.size());
+		System.out.println("new added: "+ users.size());
 		return Response.status(200).build();
 	}
 	
@@ -38,36 +38,40 @@ public class HelloWorldService {
 	@Path("/restart")
 	public Response responseMsg() {
 		g = new Game();
-		System.out.println("restart");
 		return Response.status(200).entity(g).build();
 	}
 	
 	@POST
 	@Path("/updatecounters")
 	public Response done(@FormParam("state") String state, @CookieParam("username") String username) {
-		if (state=="w") users.get(username).incWins();
-		if (state=="d") users.get(username).incDraws();
-		if (state=="l") users.get(username).incLosses();
-		return Response.status(200).build();
+		System.out.println(users.size());
+		if (state.startsWith("w")) users.get(username).incWins();
+		if (state.startsWith("d")) users.get(username).incDraws();
+		if (state.startsWith("l")) users.get(username).incLosses();
+		return Response.status(200).entity(users.get(username)).build();
 	}
 	
+	@GET
+	@Path("/checkname")
+	public Response checkName(@CookieParam("username") String name) {
+		return Response.status(200).entity(users.containsKey(name)?"valid":"invalid").build();
+	}
 	@POST
 	@Path("/brain")
 	public Response processMove(@FormParam("position") String position, @FormParam("difficulty") String diff) { // looks at the move made, makes it, and makes random other
 		int pos = Integer.parseInt(position);
+		if (g.getSpace(pos) != 0)
+			return Response.status(200).entity(g).build();
 		g.update(pos, 1);
 		if (g.getStatus() != "c") {
 			return Response.status(200).entity(g).build();
 		}
 		if (diff.startsWith("e")) {
 			g.update(g.computeRandMove(), 2);
-			System.out.println("Easy move made");
 		} else if (diff.startsWith("m")) {
 			g.update(g.computeOkayMove(), 2);
-			System.out.println("Medium move made");
 		} else if (diff.startsWith("h")) {
 			g.update(g.computeBestMove(), 2);
-			System.out.println("Hard move made");
 		} else {
 			assert false;
 		}

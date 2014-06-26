@@ -6,10 +6,13 @@
 <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
 <script src="/Web-Hello-World/jquery.cookie.js"></script>
 <script>
-var wins = 0;
-var draws = 0;
-var losses = 0;
 function restart() {
+	$.post("rest/updatecounters",{state:"c"}, function(data,status,obj) {
+		var reply = obj.responseJSON;
+		document.getElementById("wins").innerHTML = obj.responseJSON.wins;
+		document.getElementById("draws").innerHTML = reply.draws;
+		document.getElementById("losses").innerHTML = reply.losses;
+	}, "json")
 	$.get("rest/restart", function(data,status,obj){
 		var reply = obj.responseJSON;
 		for (i=0;i<9;i++) {
@@ -22,23 +25,23 @@ function updateBoard(pos) {
 	$.post("rest/brain",{position:pos, difficulty: document.getElementById("diff1").checked ? "easy" : "medium"},
 			function(data,status,obj){
 				var reply = obj.responseJSON;
-				$.post("rest/updatecounters",{state:reply.status})
+				$.post("rest/updatecounters",{state:reply.status}, function(data,status,obj) {
+					var reply = obj.responseJSON;
+					console.log("update counters success");
+					document.getElementById("wins").innerHTML = reply.wins;
+					document.getElementById("draws").innerHTML = reply.draws;
+					document.getElementById("losses").innerHTML = reply.losses;
+				}, "json");
 				for (i=0;i<9;i++) {
 					document.getElementById(i.toString()).innerHTML = reply.symBoard[i];
 				}
 				if (reply.status == "w") {
-					wins++;
-					document.getElementById("wins").innerHTML = wins.toString();
 					document.getElementById("bottom").innerHTML='You win.<br><button onclick="restart()">New game?</button>';
 				}
 				if (reply.status =="l") {
-					losses++;
-					document.getElementById("losses").innerHTML = losses.toString();
 					document.getElementById("bottom").innerHTML='You lose.<br><button onclick="restart()">New game?</button>';
 				}
 				if (reply.status =="d") {
-					draws++;
-					document.getElementById("draws").innerHTML = draws.toString();
 					document.getElementById("bottom").innerHTML='It\'s a draw.<br><button onclick="restart()">New game?</button>';
 				}
 			}, "json")
@@ -46,8 +49,11 @@ function updateBoard(pos) {
 </script>
 </head>
 <body>
+Welcome, <label id="usr"></label>.
+<br>
 <script>
-restart()
+document.getElementById("usr").innerHTML = $.cookie("username");
+restart();
 </script>
 Wins: <div id="wins" style="display:inline">0</div> &nbsp; Draws: <div id="draws" style="display:inline">0</div> &nbsp; Losses: <div id="losses" style="display:inline">0</div>
 <table class="fixed">

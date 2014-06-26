@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Home</title>
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="/Web-Hello-World/jquery.cookie.js"></script>
+</head>
+<body>
+<script>
+if ($.cookie("username")==null) location.assign("login.html")
+$.get("rest/checkname", function(data,status){
+	console.log(data);
+	if (data=="valid") location.assign("game.html");
+	else location.assign("login.html");
+})
+</script>
+You should have been redirected...
+</body>
+</html>
