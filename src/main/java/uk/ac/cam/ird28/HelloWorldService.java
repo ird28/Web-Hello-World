@@ -1,7 +1,6 @@
 package uk.ac.cam.ird28;
 
-import java.util.HashMap;
-
+import java.net.UnknownHostException;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -13,42 +12,53 @@ import javax.ws.rs.core.Response;
 public class HelloWorldService {
 	
 	private static Game g;
-	private static HashMap<String,User> users = new HashMap<String,User>();
 	
 	@POST
 	@Path("/login")
 	public Response login(@FormParam("username") String username, @FormParam("password") String password) {
-		if (users.containsKey(username)) {
-			if (users.get(username).checkPassword(password)) {
-				System.out.println("Successful log in by "+username);
-				return Response.status(200).entity("accepted").build();
+		try {
+			if (MongoStuff.containsUser(username)) {
+				if (MongoStuff.getUser(username).checkPassword(password)) {
+					System.out.println("Successful log in by "+username);
+					return Response.status(200).entity("accepted").build();
+				} else {
+					System.out.println("Failed attempt to log in by "+username);
+					return Response.status(200).entity("rejected").build();
+				}
 			} else {
-				System.out.println("Failed attempt to log in by "+username);
-				return Response.status(200).entity("rejected").build();
+				return Response.status(200).entity("unrecognised").build();
 			}
-		} else {
-			return Response.status(200).entity("unrecognised").build();
+		} catch (UnknownHostException uhe) {
+			return Response.status(503).build();
 		}
 	}
 	
 	@POST
 	@Path("/signup")
 	public Response signup(@FormParam("username") String username, @FormParam("passwordA") String passwordA, @FormParam("passwordB") String passwordB) {
-		if (users.containsKey(username)) {
-			return Response.status(200).entity("taken").build();
+		try {
+			if (MongoStuff.containsUser(username)) {
+				return Response.status(200).entity("taken").build();
+			}
+			if (!passwordA.equals(passwordB)) {
+				return Response.status(200).entity("inconsistent").build();
+			}
+			MongoStuff.addUser(username, new User(username, passwordA));
+			System.out.println("Adding user "+username+" with password "+passwordA);
+			return Response.status(200).entity("success").build();
+		} catch (UnknownHostException uhe) {
+			return Response.status(503).build();
 		}
-		if (!passwordA.equals(passwordB)) {
-			return Response.status(200).entity("inconsistent").build();
-		}
-		users.put(username, new User(username, passwordA));
-		System.out.println("Adding user "+username+" with password "+passwordA);
-		return Response.status(200).entity("success").build();
 	}
 	
 	@POST
 	@Path("/checkpassword")
 	public Response check(@FormParam("word") String word, @CookieParam("username") String username) {
-		return Response.status(200).entity(users.get(username).checkPassword(word) ? "correct":"incorrect").build();
+		try {
+			return Response.status(200).entity(MongoStuff.getUser(username).checkPassword(word) ? "correct":"incorrect").build();
+		} catch (UnknownHostException uhe) {
+			return Response.status(503).build();
+		}
 	}	
 	
 	
@@ -62,16 +72,24 @@ public class HelloWorldService {
 	@POST
 	@Path("/updatecounters")
 	public Response done(@FormParam("state") String state, @CookieParam("username") String username) {
-		if (state.startsWith("w")) users.get(username).incWins();
-		if (state.startsWith("d")) users.get(username).incDraws();
-		if (state.startsWith("l")) users.get(username).incLosses();
-		return Response.status(200).entity(users.get(username)).build();
+		try {
+			if (state.startsWith("w")) MongoStuff.incWins(username);
+			if (state.startsWith("d")) MongoStuff.incDraws(username);
+			if (state.startsWith("l")) MongoStuff.incLosses(username);
+			return Response.status(200).entity(MongoStuff.getUser(username)).build();
+		} catch (UnknownHostException uhe) {
+			return Response.status(503).build();
+		}
 	}
 	
 	@GET
 	@Path("/checkname")
 	public Response checkName(@CookieParam("username") String name) {
-		return Response.status(200).entity(users.containsKey(name)?"valid":"invalid").build();
+		try {
+			return Response.status(200).entity(MongoStuff.containsUser(name)?"valid":"invalid").build();
+		} catch (UnknownHostException uhe) {
+				return Response.status(503).build();
+		}
 	}
 	@POST
 	@Path("/brain")
