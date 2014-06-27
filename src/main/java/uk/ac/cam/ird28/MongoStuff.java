@@ -19,6 +19,13 @@ public class MongoStuff {
 		MongoConnection.getUserTable().insert(document);
 	}
 	
+	public static void removeUser(String username) throws UnknownHostException {
+		assert containsUser(username);
+		BasicDBObject searchQuery = new BasicDBObject();
+		searchQuery.put("username", username);
+		MongoConnection.getUserTable().remove(searchQuery);
+	}
+	
 	public static User getUser(String username) throws UnknownHostException {
 		BasicDBObject searchQuery = new BasicDBObject();
 		searchQuery.put("username", username);
