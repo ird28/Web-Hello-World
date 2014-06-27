@@ -15,29 +15,45 @@ function login() {
 					}
 					else if (data == "rejected") {
 						document.getElementById("password1").value = "";
-						document.getElementById("message1").innerHTML = "Sorry, incorrect password. Please try again."
+						document.getElementById("message1").innerHTML = "Sorry, incorrect password. Please try again.";
+						document.getElementById("password1").focus();
+						document.getElementById("message2").innerHTML = "";
 					}
 					else if (data == "unrecognised") {
 						document.getElementById("username1").value = "";
 						document.getElementById("password1").value = "";
-						document.getElementById("message1").innerHTML = "Sorry, the username was not recognised. Please try again."
+						document.getElementById("message1").innerHTML = "Sorry, the username was not recognised. Please try again.";
+						document.getElementById("username1").focus();
+						document.getElementById("message2").innerHTML = "";
 					}
 					else {alert("something is wrong")}
 			}
 		)
 }
 function signup() {
-	$.post("rest/signup", {username: document.getElementById("username2").value, password: document.getElementById("password2").value},
+	$.post("rest/signup", {username: document.getElementById("username2").value, passwordA: document.getElementById("password2a").value, 
+		passwordB: document.getElementById("password2b").value},
 			function(data) {
 				if (data == "success") {
 					$.cookie("username", document.getElementById("username2").value);
 					location.assign("game.html")
 				}
-				else {
-					document.getElementById("username2").value = "";
-					document.getElementById("password2").value = "";
-					document.getElementById("message2").innerHTML = "Sorry, that username has been taken. Please try again."
+				else if (data == "inconsistent") {
+					document.getElementById("password2a").value = "";
+					document.getElementById("password2b").value = "";
+					document.getElementById("message2").innerHTML = "The passwords did not match. Please try again.";
+					document.getElementById("password2a").focus();
+					document.getElementById("message1").innerHTML = "";
 				}
+				else if (data == "taken"){
+					document.getElementById("username2").value = "";
+					document.getElementById("password2a").value = "";
+					document.getElementById("password2b").value = "";
+					document.getElementById("message2").innerHTML = "Sorry, that username has been taken. Please try again.";
+					document.getElementById("username2").focus();
+					document.getElementById("message1").innerHTML = "";
+				}
+				else {alert("something has gone wrong")}
 		}		
 	)
 }
@@ -52,7 +68,8 @@ Password <input type="password" id="password1">
 <br>
 Else create an account: <br>
 Username <input type="text" id="username2">
-Password <input type="password" id="password2">
+Password <input type="password" id="password2a">
+Confirm Password <input type="password" id="password2b">
 <button type="button" onclick="signup()">Create account</button>
 <div id="message2"></div>
 </body>

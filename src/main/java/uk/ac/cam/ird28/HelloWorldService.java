@@ -33,12 +33,15 @@ public class HelloWorldService {
 	
 	@POST
 	@Path("/signup")
-	public Response signup(@FormParam("username") String username, @FormParam("password") String password) {
+	public Response signup(@FormParam("username") String username, @FormParam("passwordA") String passwordA, @FormParam("passwordB") String passwordB) {
 		if (users.containsKey(username)) {
 			return Response.status(200).entity("taken").build();
 		}
-		users.put(username, new User(username, password));
-		System.out.println("Adding user "+username+" with password "+password);
+		if (!passwordA.equals(passwordB)) {
+			return Response.status(200).entity("inconsistent").build();
+		}
+		users.put(username, new User(username, passwordA));
+		System.out.println("Adding user "+username+" with password "+passwordA);
 		return Response.status(200).entity("success").build();
 	}
 	
