@@ -1,0 +1,8 @@
+[type='submit'] {
+	height: 50px;
+	width:  50px;
+	font-size: 28pt;	
+	display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+}

@@ -4,6 +4,7 @@ public class Game {
 	
 	private int[] board;
 	private String status;
+	public boolean easyUsed;
 		
 	public Game() {
 		status = "c";
@@ -11,6 +12,7 @@ public class Game {
 		for (int i = 0; i < 9; i++) {
 			board[i] = 0;
 		}
+		easyUsed = false;
 	}
 	
 	public Game(int[] initialBoard) {
@@ -19,6 +21,7 @@ public class Game {
 		for (int i = 0; i < 9; i++) {
 			board[i] = initialBoard[i];
 		}
+		easyUsed = false;
 	}
 	
 	public int[] getBoard() { return board; }
@@ -32,6 +35,8 @@ public class Game {
 	}
 	
 	public String getStatus() { return status; }
+	
+	public String getEasyUsed() { return easyUsed ? "yes":"no"; }
 	
 	private static String getSym(int x) {
 		if (x==0) return " ";

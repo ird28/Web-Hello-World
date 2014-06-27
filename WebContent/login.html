@@ -5,6 +5,7 @@
 <title>Login</title>
 <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
 <script src="/Web-Hello-World/jquery.cookie.js"></script>
+<link rel="stylesheet" href="loginstyle.css">
 <script>
 function login() {
 	$.post("rest/login", {username: document.getElementById("username1").value, password: document.getElementById("password1").value},
@@ -43,7 +44,7 @@ function signup() {
 					document.getElementById("password2b").value = "";
 					document.getElementById("message2").innerHTML = "The passwords did not match. Please try again.";
 					document.getElementById("password2a").focus();
-					document.getElementById("message1").innerHTML = "";
+					document.getElementById("message1").innerHTML = "<br>";
 				}
 				else if (data == "taken"){
 					document.getElementById("username2").value = "";
@@ -51,7 +52,7 @@ function signup() {
 					document.getElementById("password2b").value = "";
 					document.getElementById("message2").innerHTML = "Sorry, that username has been taken. Please try again.";
 					document.getElementById("username2").focus();
-					document.getElementById("message1").innerHTML = "";
+					document.getElementById("message1").innerHTML = "<br>";
 				}
 				else {alert("something has gone wrong")}
 		}		
@@ -64,8 +65,8 @@ If you have previously logged in: <br>
 Username <input type="text" id="username1">
 Password <input type="password" id="password1">
 <button type="button" onclick='login()'>Log in</button>
-<div id="message1"></div>
-<br>
+<div id="message1"><br></div>
+
 Else create an account: <br>
 Username <input type="text" id="username2">
 Password <input type="password" id="password2a">

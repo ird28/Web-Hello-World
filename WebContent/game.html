@@ -27,7 +27,6 @@ function updateBoard(pos) {
 				var reply = obj.responseJSON;
 				$.post("rest/updatecounters",{state:reply.status}, function(data,status,obj) {
 					var reply = obj.responseJSON;
-					console.log("update counters success");
 					document.getElementById("wins").innerHTML = reply.wins;
 					document.getElementById("draws").innerHTML = reply.draws;
 					document.getElementById("losses").innerHTML = reply.losses;
@@ -36,7 +35,10 @@ function updateBoard(pos) {
 					document.getElementById(i.toString()).innerHTML = reply.symBoard[i];
 				}
 				if (reply.status == "w") {
-					document.getElementById("bottom").innerHTML='You win.<br><button onclick="restart()">New game?</button>';
+					if (reply.easyUsed=="yes")
+						document.getElementById("bottom").innerHTML='You win, but you used the easy difficulty so it doesn\'t count.<br><button onclick="restart()">New game?</button>';
+					else
+						document.getElementById("bottom").innerHTML='You win.<br><button onclick="restart()">New game?</button>';
 				}
 				if (reply.status =="l") {
 					document.getElementById("bottom").innerHTML='You lose.<br><button onclick="restart()">New game?</button>';
@@ -51,6 +53,7 @@ function logout() {
 	location.assign("home.html");
 }
 </script>
+<link rel="stylesheet" href="gamestyle.css">
 </head>
 <body>
 Welcome, <label id="usr"></label>.
@@ -61,21 +64,21 @@ document.getElementById("usr").innerHTML = $.cookie("username");
 restart();
 </script>
 Wins: <div id="wins" style="display:inline">0</div> &nbsp; Draws: <div id="draws" style="display:inline">0</div> &nbsp; Losses: <div id="losses" style="display:inline">0</div>
-<table class="fixed">
+<table>
 <tr>
-	<td><button type="submit" onclick='updateBoard("0")' style="width:30px;height:30px"><div id="0"> </div></button></td>
-	<td><button type="submit" onclick='updateBoard("1")' style="width:30px;height:30px"><div id="1"> </div></button></td>
-	<td><button type="submit" onclick='updateBoard("2")' style="width:30px;height:30px"><div id="2"> </div></button></td>
+	<td><button type="submit" onclick='updateBoard("0")'><div id="0"> </div></button></td>
+	<td><button type="submit" onclick='updateBoard("1")'><div id="1"> </div></button></td>
+	<td><button type="submit" onclick='updateBoard("2")'><div id="2"> </div></button></td>
 </tr>
 <tr>
-	<td><button type="submit" onclick='updateBoard("3")' style="width:30px;height:30px"><div id="3"> </div></button></td>
-	<td><button type="submit" onclick='updateBoard("4")' style="width:30px;height:30px"><div id="4"> </div></button></td>
-	<td><button type="submit" onclick='updateBoard("5")' style="width:30px;height:30px"><div id="5"> </div></button></td>
+	<td><button type="submit" onclick='updateBoard("3")'><div id="3"> </div></button></td>
+	<td><button type="submit" onclick='updateBoard("4")'><div id="4"> </div></button></td>
+	<td><button type="submit" onclick='updateBoard("5")'><div id="5"> </div></button></td>
 </tr>
 <tr>
-	<td><button type="submit" onclick='updateBoard("6")' style="width:30px;height:30px"><div id="6"> </div></button></td>
-	<td><button type="submit" onclick='updateBoard("7")' style="width:30px;height:30px"><div id="7"> </div></button></td>
-	<td><button type="submit" onclick='updateBoard("8")' style="width:30px;height:30px"><div id="8"> </div></button></td>
+	<td><button type="submit" onclick='updateBoard("6")'><div id="6"> </div></button></td>
+	<td><button type="submit" onclick='updateBoard("7")'><div id="7"> </div></button></td>
+	<td><button type="submit" onclick='updateBoard("8")'><div id="8"> </div></button></td>
 </tr>
 </table>
 <div id="bottom">

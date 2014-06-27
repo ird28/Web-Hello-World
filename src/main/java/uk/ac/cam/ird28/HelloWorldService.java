@@ -71,8 +71,11 @@ public class HelloWorldService {
 	
 	@POST
 	@Path("/updatecounters")
-	public Response done(@FormParam("state") String state, @CookieParam("username") String username) {
+	public Response done(@FormParam("state") String state, @FormParam("difficulty") String diff, @CookieParam("username") String username) {
 		try {
+			if (g.easyUsed && state.startsWith("w")) {
+				return Response.status(200).entity(MongoStuff.getUser(username)).build();
+			}
 			if (state.startsWith("w")) MongoStuff.incWins(username);
 			if (state.startsWith("d")) MongoStuff.incDraws(username);
 			if (state.startsWith("l")) MongoStuff.incLosses(username);
@@ -102,6 +105,7 @@ public class HelloWorldService {
 			return Response.status(200).entity(g).build();
 		}
 		if (diff.startsWith("e")) {
+			g.easyUsed = true;
 			g.update(g.computeRandMove(), 2);
 		} else if (diff.startsWith("m")) {
 			g.update(g.computeOkayMove(), 2);
