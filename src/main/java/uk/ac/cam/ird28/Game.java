@@ -5,6 +5,7 @@ public class Game {
 	private int[] board;
 	private String status;
 	public boolean easyUsed;
+	private int whoFirst;
 		
 	public Game() {
 		status = "c";
@@ -13,6 +14,7 @@ public class Game {
 			board[i] = 0;
 		}
 		easyUsed = false;
+		whoFirst = Math.random()>0.5 ? 1 : 2;
 	}
 	
 	public Game(int[] initialBoard) {
@@ -25,6 +27,8 @@ public class Game {
 	}
 	
 	public int[] getBoard() { return board; }
+	
+	public int getWhoFirst() { return whoFirst; }
 	
 	public String[] getSymBoard() {
 		String[] result = new String[9];

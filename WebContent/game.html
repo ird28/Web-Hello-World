@@ -7,19 +7,19 @@
 <script src="/Web-Hello-World/jquery.cookie.js"></script>
 <script>
 function restart() {
+	$.get("rest/restart", function(data,status,obj){
+		var reply = obj.responseJSON;
+		for (i=0;i<9;i++) {
+			document.getElementById(i.toString()).innerHTML = reply.symBoard[i];
+		}
+		document.getElementById("bottom").innerHTML = 'Difficulty: <input type="radio" id="diff1" name="diff" value="easy">Easy <input type="radio" id="diff2" name="diff" value="medium" checked>Medium';
+	}, "json");
 	$.post("rest/updatecounters",{state:"c"}, function(data,status,obj) {
 		var reply = obj.responseJSON;
 		document.getElementById("wins").innerHTML = obj.responseJSON.wins;
 		document.getElementById("draws").innerHTML = reply.draws;
 		document.getElementById("losses").innerHTML = reply.losses;
-	}, "json")
-	$.get("rest/restart", function(data,status,obj){
-		var reply = obj.responseJSON;
-		for (i=0;i<9;i++) {
-			document.getElementById(i.toString()).innerHTML = reply.symBoard[i];;
-		}
-		document.getElementById("bottom").innerHTML = 'Difficulty: <input type="radio" id="diff1" name="diff" value="easy">Easy <input type="radio" id="diff2" name="diff" value="medium" checked>Medium';
-	}, "json")
+	}, "json");
 }
 function updateBoard(pos) {
 	$.post("rest/brain",{position:pos, difficulty: document.getElementById("diff1").checked ? "easy" : "medium"},

@@ -44,7 +44,7 @@ public class HelloWorldService {
 				return Response.status(200).entity("inconsistent").build();
 			}
 			MongoStuff.addUser(username, new User(username, passwordA));
-			System.out.println("Adding user "+username+" with password "+passwordA);
+			System.out.println("Adding user \""+username+"\" with password \""+passwordA+"\"");
 			return Response.status(200).entity("success").build();
 		} catch (UnknownHostException uhe) {
 			return Response.status(503).build();
@@ -66,9 +66,13 @@ public class HelloWorldService {
 	@Path("/restart")
 	public Response responseMsg() {
 		g = new Game();
+		if (g.getWhoFirst() == 2)
+			g.update(g.computeRandMove(),2);
+		else assert g.getWhoFirst() == 1;
 		return Response.status(200).entity(g).build();
 	}
 	
+
 	@POST
 	@Path("/updatecounters")
 	public Response done(@FormParam("state") String state, @FormParam("difficulty") String diff, @CookieParam("username") String username) {
@@ -114,6 +118,9 @@ public class HelloWorldService {
 		} else {
 			assert false;
 		}
+		
+			
+		
 		return Response.status(200).entity(g).build();
 	}
 	
